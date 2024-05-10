@@ -3,7 +3,7 @@ import pandas as pd
 import re
 
 
-def replace_reduplication(text)
+def replace_reduplication(text):
     text = re.sub(r' ', '~', text, flags=re.IGNORECASE)
     text = re.sub(r'INF', 'INF~', text, flags=re.IGNORECASE)
 
@@ -216,6 +216,12 @@ def csv_to_latex_commands(csv_file_path, output_file_path, output2_file_path):
     print(f"LaTeX commands saved to {output_file_path}")
 
     with open(output2_file_path, 'w') as output2_file:
+        # Write introductory text (before processing CSV lines)
+        intro_text = ("\\documentclass[Bk_Ende-grammar.tex]{subfiles}" "\n"
+                      "\\graphicspath{{\\subfix{../images/}}}""\n"
+                      "\\begin{document}""\n")
+        output2_file.write(intro_text)
+
         for index, line in df.iterrows():
             example_id = str(line.iloc[6])[:9]
             example_id += f"dash{str(line.iloc[7])}"
@@ -227,13 +233,9 @@ def csv_to_latex_commands(csv_file_path, output_file_path, output2_file_path):
             output2_file.write('\n')
             print(f"Processed line {index + 1}...")
 
+        # Write concluding text (after processing CSV lines)
+        conclusion_text = "\\end{document}"
+        output2_file.write(conclusion_text)
+
     print(f"LaTeX commands saved to {output2_file_path}")
 
-
-
-
-csv_file_path = 'C:\\Users\\profk\\Desktop\\OpenTextCollection.csv'
-output_file_path = 'examples.sty'
-output2_file_path = 'exampletexts.sty'
-
-csv_to_latex_commands(csv_file_path, output_file_path, output2_file_path)
